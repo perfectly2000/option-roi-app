@@ -10,9 +10,9 @@ app = Flask(__name__)
 def get_expiry_dates():
     today = datetime.today()
     return [
-        (today + timedelta(days=90)).strftime('%Y-%m-%d'),
-        (today + timedelta(days=180)).strftime('%Y-%m-%d'),
-        (today + timedelta(days=365)).strftime('%Y-%m-%d')
+        (today + timedelta(days=98)).strftime('%Y-%m-%d'),
+        (today + timedelta(days=189)).strftime('%Y-%m-%d'),
+        (today + timedelta(days=370)).strftime('%Y-%m-%d')
     ]
 
 def fetch_option_data(ticker):
