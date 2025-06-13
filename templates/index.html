@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Option Premium ROI Comparison</title>
+    <style>
+        body { font-family: Arial; margin: 40px; }
+        textarea { width: 300px; height: 150px; }
+        table, th, td { border: 1px solid black; border-collapse: collapse; padding: 8px; text-align: center; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <h2>Option ROI Comparison Tool</h2>
+    <form method="post">
+        <label>Enter up to 10 stock tickers (one per line):</label><br>
+        <textarea name="tickers" placeholder="AAPL&#10;MSFT&#10;TSLA"></textarea><br><br>
+        <input type="submit" value="Calculate">
+    </form>
+
+    {% if results %}
+        <h3>Detailed Strike Comparison</h3>
+        {% for ticker, data_sets in results.items() %}
+            <h4>{{ ticker }}</h4>
+            {% for set in data_sets %}
+                <table>
+                    <tr>
+                        <th>Expiration</th>
+                        <th>Stock Price</th>
+                        <th>Strike</th>
+                        <th>Bid</th>
+                        <th>ROI (%)</th>
+                    </tr>
+                    {% for entry in set %}
+                        <tr>
+                            <td>{{ entry.expiration }}</td>
+                            <td>{{ entry.price }}</td>
+                            <td>{{ entry.strike }}</td>
+                            <td>{{ entry.bid }}</td>
+                            <td>{{ entry.roi }}</td>
+                        </tr>
+                    {% endfor %}
+                </table><br>
+            {% endfor %}
+        {% endfor %}
+    {% endif %}
+</body>
+</html>
