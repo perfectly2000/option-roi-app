@@ -21,26 +21,30 @@
         <h3>Detailed Strike Comparison</h3>
         {% for ticker, data_sets in results.items() %}
             <h4>{{ ticker }}</h4>
-            {% for set in data_sets %}
-                <table>
-                    <tr>
-                        <th>Expiration</th>
-                        <th>Stock Price</th>
-                        <th>Strike</th>
-                        <th>Bid</th>
-                        <th>ROI (%)</th>
-                    </tr>
-                    {% for entry in set %}
+            {% if data_sets %}
+                {% for set in data_sets %}
+                    <table>
                         <tr>
-                            <td>{{ entry.expiration }}</td>
-                            <td>{{ entry.price }}</td>
-                            <td>{{ entry.strike }}</td>
-                            <td>{{ entry.bid }}</td>
-                            <td>{{ entry.roi }}</td>
+                            <th>Expiration</th>
+                            <th>Stock Price</th>
+                            <th>Strike</th>
+                            <th>Bid</th>
+                            <th>ROI (%)</th>
                         </tr>
-                    {% endfor %}
-                </table><br>
-            {% endfor %}
+                        {% for entry in set %}
+                            <tr>
+                                <td>{{ entry.expiration }}</td>
+                                <td>{{ entry.price }}</td>
+                                <td>{{ entry.strike }}</td>
+                                <td>{{ entry.bid }}</td>
+                                <td>{{ entry.roi }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table><br>
+                {% endfor %}
+            {% else %}
+                <p style="color: red;">No option data found for {{ ticker }}</p>
+            {% endif %}
         {% endfor %}
     {% endif %}
 </body>

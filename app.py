@@ -3,6 +3,7 @@ import yfinance as yf
 from datetime import datetime, timedelta
 import traceback
 import os
+import requests
 
 app = Flask(__name__)
 
@@ -16,12 +17,23 @@ def get_expiry_dates():
 
 def fetch_option_data(ticker):
     try:
-        stock = yf.Ticker(ticker)
-        price = stock.history(period='1d')['Close'].iloc[-1]
-        expiries = stock.options
-        target_dates = get_expiry_dates()
+        session = requests.Session()
+        session.verify = False  # Temporary fix for SSL issues on Render
+        stock = yf.Ticker(ticker, session=session)
+        price_data = stock.history(period='1d')
+        if price_data.empty:
+            print(f"No price data for {ticker}")
+            return None
+        price = price_data['Close'].iloc[-1]
 
+        expiries = stock.options
+        if not expiries:
+            print(f"No expirations for {ticker}")
+            return None
+
+        target_dates = get_expiry_dates()
         result = []
+
         for date in target_dates:
             try:
                 closest_date = min(
@@ -73,7 +85,9 @@ def index():
         for ticker in tickers:
             ticker = ticker.strip().upper()
             if ticker:
-                results[ticker] = fetch_option_data(ticker)
+                data = fetch_option_data(ticker)
+                if data:
+                    results[ticker] = data
     return render_template('index.html', results=results)
 
 if __name__ == '__main__':
